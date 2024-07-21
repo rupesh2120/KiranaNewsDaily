@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchHeadlines } from '../apis/newsApi';
-import { storeData, getData } from '../storage/offlineStorageService';
+import { storeData, getData, removeData } from '../storage/offlineStorageService';
 import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday';
 import isYesterday from 'dayjs/plugin/isYesterday';
@@ -27,31 +27,36 @@ const formatDate = (dateString) => {
 const useFetchData = () => {
   const [headlines, setHeadlines] = useState([]);
 
+  const loadHeadlines = async () => {
+    const storedHeadlines = await getData("headlines");
+    // Filter out items with null description or urlToImage
+    if (storedHeadlines) {
+      setHeadlines(storedHeadlines);
+    } else {
+      const fetchedHeadlines = await fetchHeadlines();
+      const filteredHeadlines = fetchedHeadlines.slice(0,100).filter(item => item.description !== null && item.urlToImage !== null && item.author !== null);
+
+    // Add isPinned key to each object
+    const updatedHeadlines = filteredHeadlines.map(item => ({
+      ...item,
+      isPinned: false,
+      formattedDate: formatDate(item.publishedAt)
+    }));
+      setHeadlines(updatedHeadlines);
+      await storeData("headlines", updatedHeadlines);
+    }
+  };
+
   useEffect(() => {
-    const loadHeadlines = async () => {
-      const storedHeadlines = await getData("headlines");
-      // Filter out items with null description or urlToImage
-      const filteredHeadlines = storedHeadlines.filter(item => item.description !== null && item.urlToImage !== null && item.author !== null);
-
-      // Add isPinned key to each object
-      const updatedHeadlines = filteredHeadlines.map(item => ({
-        ...item,
-        isPinned: false,
-        formattedDate: formatDate(item.publishedAt)
-      }));
-      if (storedHeadlines && updatedHeadlines) {
-        setHeadlines(updatedHeadlines);
-      } else {
-        const fetchedHeadlines = await fetchHeadlines();
-        setHeadlines(fetchedHeadlines);
-        await storeData("headlines", fetchedHeadlines);
-      }
-    };
-
     loadHeadlines();
   }, []);
 
-  return headlines;
+  const resetHeadlines = async () => {
+    await removeData("headlines");
+    await loadHeadlines();
+  };
+
+  return { headlines, resetHeadlines, loadHeadlines };
 };
 
 export default useFetchData;
