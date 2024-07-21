@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import HeadlineList from './components/HeadLinesList';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Hello There</Text>
-      <StatusBar style="auto" />
+      <HeadlineList />
     </View>
   );
 }
