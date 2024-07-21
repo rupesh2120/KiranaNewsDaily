@@ -7,7 +7,7 @@ import useFetchData from '../hooks/useFetchData';
 
 const HeadlineList = ({ headlines, onDelete, onPin }) => {
   const fetchedHeadlines = useFetchData();
-  
+
   if(fetchedHeadlines.length === 0){
     return (
       <View>
@@ -33,7 +33,8 @@ const HeadlineList = ({ headlines, onDelete, onPin }) => {
 
 const styles = StyleSheet.create({
   list: {
-    padding: 10,
+    paddingHorizontal: 1,
+    marginTop: 30
   },
 });
 

@@ -3351,7 +3351,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dayjs@npm:^1.8.15":
+"dayjs@npm:^1.11.12, dayjs@npm:^1.8.15":
   version: 1.11.12
   resolution: "dayjs@npm:1.11.12"
   checksum: 40a4f67c2df3af125ae0ddec68d3a6d806d3009a7414bf45479aaf82f1dd82f3e139e6642e72391abccc37488897830c56afcabb4c819014130d283644df8128
@@ -5476,6 +5476,7 @@ __metadata:
     "@react-native-async-storage/async-storage": ^1.24.0
     "@types/react": ^18.3.3
     axios: ^1.7.2
+    dayjs: ^1.11.12
     expo: ~51.0.21
     expo-status-bar: ~1.12.1
     react: 18.2.0
