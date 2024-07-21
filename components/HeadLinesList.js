@@ -2,26 +2,19 @@ import React, {useEffect, useState} from 'react';
 import { FlatList, StyleSheet, View, Text } from 'react-native';
 import axios from 'axios';
 import { NEWS_API_KEY } from '../constants';
-import Article from './Article'
+import Article from './Article';
+import useFetchData from '../hooks/useFetchData';
 
 const HeadlineList = ({ headlines, onDelete, onPin }) => {
-  const [fetchedHeadlines, setFetchedHeadlines] = useState([]);
-  const [totalResults, setTotalResults] = useState([]);
-
-  useEffect(() => {
-    const fetchHeadlines = async () => {
-      try {
-        const response = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&pageSize=100&apiKey=${NEWS_API_KEY}`);
-        setFetchedHeadlines(response.data.articles)
-        setTotalResults(response.data.totalResults)
-        return response.data.articles;
-      } catch (error) {
-        throw error;
-      }
-    };
-    fetchHeadlines()
-  }, [])
-
+  const fetchedHeadlines = useFetchData();
+  
+  if(fetchedHeadlines.length === 0){
+    return (
+      <View>
+        <Text>Loading....</Text>
+      </View>
+    )
+  }
   return (
     <FlatList
       data={fetchedHeadlines}
